@@ -1,0 +1,25 @@
+{
+  "name": "botGardens",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "start-dev": "nodemon app.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "baileys": "^1.1.1",
+    "body-parser": "^1.19.0",
+    "express": "^4.17.1",
+    "load-json-file": "^6.2.0",
+    "qrcode-terminal": "^0.12.0",
+    "whatsapp-web.js": "^1.12.6",
+    "xlsx": "^0.17.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.7"
+  }
+}
