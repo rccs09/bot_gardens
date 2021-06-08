@@ -1,0 +1,61 @@
+{
+	"info": {
+		"_postman_id": "c476cbab-d71d-4f36-8cfb-d508a84de51d",
+		"name": "whatsapp",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "whatsapp_connect",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/whatsapp/connect",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"whatsapp",
+						"connect"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "whatsapp_sendmessage",
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {}
+			},
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"phone\": \"593123321456\",\r\n    \"body\": \"Otro mensaje mas :( \"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/whatsapp/sendmessage",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"whatsapp",
+						"sendmessage"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
