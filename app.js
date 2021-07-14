@@ -1,33 +1,31 @@
-// const PendingAliquots = require('./src/helpers/pendingAliquots');
+/*
+const { pruebaCodigo } = require('./src/helpers/prueba');
+const main = async() => {
+    pruebaCodigo();
+}
+main();
+*/
 
-// const main = async() => {
-//     const filePath = "D:/Documentos/Roberto/Casa/GardensClub/Directiva2021/ControlTesoreria.xlsx"
-//     const sheetName = "Alicuotas";
-//     const pendingAliquots = new PendingAliquots(filePath, sheetName, "2021", "Junio" );
-//     await pendingAliquots.init();
-//     pendingAliquots.gerateAllPendingReport();
+////////////////////////////////////////////////////////////////////////////////////////
 
-// }
-
-// main();
-////////////////////////////////////////////////
-
+const Constants = require('./src/config/constants');
+const WhatsAppBoot = require('./src/helpers/whatsAppBoot');
 const express = require('express');
 const bodyParser = require('body-parser');
-const Whatsapp = require('./src/helpers/whatsApp');
 const app = express();
 const router = express.Router();
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
-const port = 3000;
+const port = 3001;
 
-whatsapp = new Whatsapp();
-app.post('/whatsapp/connect', whatsapp.conectApi);
-app.post('/whatsapp/sendmessage', whatsapp.sendMessage);
+let whatsAppBoot = new WhatsAppBoot(Constants.FILE_PATH);
+whatsAppBoot.init();
 
-
+app.post('/whatsapp/sendAllMessage', whatsAppBoot.sendAllMessage);
+app.post('/whatsapp/updateDataBase', whatsAppBoot.updateDataBase);
+app.post('/whatsapp/pendingByHouse', whatsAppBoot.pendingByHouse);
+app.post('/whatsapp/detailByHouse', whatsAppBoot.detailByHouse);
 app.listen(port, () => {
     console.log(`Iniciado el servidor en el puerto ${port}`);
 });
-
 

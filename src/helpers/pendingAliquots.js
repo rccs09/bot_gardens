@@ -1,24 +1,32 @@
 const FileManager = require('./fileManager');
 const Constants = require('../config/constants');
-
+const Util = require('../config/util');
 
 class PendingAliquots{
     filePath;
-    sheetName;
     monthsConf ;
     jsonXlsAlicuotas;
+    jsonXlsCellNumbers;
+    jsonXlsStatusAcount;
+    jsonXlsIncome;
     currentMonth;
     currentYear;
-    constructor(filePath, sheetName, currentYear, currentMonth){
+    cutoffDate;
+    
+    constructor(filePath){
         this.filePath = filePath;
-        this.sheetName = sheetName;
-        this.currentYear = currentYear;
-        this.currentMonth = currentMonth;
     }
     
     async init(){
-        this.monthsConf = await FileManager.getConfigJsonFile("./src/config/months.json");
-        this.jsonXlsAlicuotas = FileManager.getWorkSheetJsonFromFile(this.filePath, this.sheetName);
+        this.monthsConf = await FileManager.getConfigJsonFile("./src/config/monthsOfPeriod.json");
+        this.jsonXlsAlicuotas = FileManager.getWorkSheetJsonFromFile(this.filePath, Constants.SHT_ALIQUOTS_NAME);
+        this.jsonXlsCellNumbers = FileManager.getWorkSheetJsonFromFile(this.filePath, Constants.SHT_TELF_NAME);
+        this.jsonXlsStatusAcount = FileManager.getWorkSheetJsonFromFile(this.filePath, Constants.SHT_STATUS_ACOUNT_NAME);
+        this.jsonXlsIncome = FileManager.getWorkSheetJsonFromFile(this.filePath, Constants.SHT_INC_NAME);
+        const statusAccountFinalLine = this.jsonXlsStatusAcount[0];
+        this.cutoffDate = Util.getDateFromExcelDate(statusAccountFinalLine.Fecha);
+        this.currentYear = String(this.cutoffDate.getFullYear());
+        this.currentMonth = Util.monthNames[this.cutoffDate.getMonth()];
     }
 
     getMothByCode(codeValue){
@@ -67,19 +75,44 @@ class PendingAliquots{
         return objResult;
     }
 
-
-    gerateAllPendingReport(){
+    generateMessageAllPendings(){
+        const messages = [];
         this.jsonXlsAlicuotas.forEach(element => {
             if(element[Constants.NAME_LABEL]){
                 const rowResult = this.getResumeByUser(element);
-               console.log(rowResult);
+                const message = Util.generateMesage(rowResult, element[Constants.HOUSE_LABEL], this.cutoffDate);
+                messages.push(element[Constants.HOUSE_LABEL] + "|" +message);
             }
         });
+        return messages;
     }
-    
+
+    generateMessagePendingByHouse(house){
+        const rowByHoue = this.jsonXlsAlicuotas.find(row => (row[Constants.HOUSE_LABEL]  === house));
+        const rowResult = this.getResumeByUser(rowByHoue);
+        const message = Util.generateMesage(rowResult, house, this.cutoffDate);
+        return message;
+    }
+
+    validateFromNumber(from){
+        const regNumbers =   this.jsonXlsCellNumbers.find(row => (row[Constants.SHT_TELF_CELL1_LABEL] === from || row[Constants.SHT_TELF_CELL2_LABEL] === from));
+        return regNumbers;
+    }
+
+    generateDetailPaysMessages(house){
+        let message;
+        const incomeByHouse =   this.jsonXlsIncome.filter(row => (row[Constants.SHT_INC_HOUSE_LABEL] === house));
+        console.log("###########################");
+        //console.log(incomeByHouse);
+        if(Object.keys(incomeByHouse).length === 0){
+            message = Util.generateDetailMesageVoid(house, this.cutoffDate);
+        }else{
+            message = Util.generateDetailCompleteMesage(house, incomeByHouse, this.cutoffDate)
+        }
+        return message;
+    }
+
 
 }
-
-
 
 module.exports = PendingAliquots;

@@ -12,11 +12,8 @@ const Util = require('../config/util');
 class WhatsAppBoot{
     client;
     sessionData;
-    filePath;
-    pendingAliquots;
-    
-    constructor(database){
-        this.filePath = database;
+
+    constructor(){
         if(!this.client){
             if(fs.existsSync(path.join(__dirname, '../database/', 'session.json'))){
                 this.sessionData = require(SESSION_FILE_PATH);
@@ -25,11 +22,6 @@ class WhatsAppBoot{
                 this.generateSession();
             }
         }
-        this.pendingAliquots = new PendingAliquots(this.filePath);
-    }
-
-    async init(){
-        await this.pendingAliquots.init();
     }
 
     sessionRetrieve(sessionData){
@@ -94,47 +86,36 @@ class WhatsAppBoot{
         this.client.on('message', async msg => {
             const { from, to, body } = msg;
             console.log(from, to, body);
-            this.processingMessageIn(from, body)
+            this.validateMessageIn(from, body)
+            //this.sendMessage(from, "MENSAJE DE RESUESTA DE PREUBA");
         });
     }
 
-    processingMessageIn(from, body){
-        const fromStd = from.replace('@c.us', '');
-        const regNumbers =   this.pendingAliquots.validateFromNumber(fromStd);
-        const bodyIn = body.toUpperCase();
+    validateMessageIn(from, body){
+        const regNumbers =   pendingAliquots.validateFromNumber(from);
         if(regNumbers){
             console.log(regNumbers);
-            switch (bodyIn) {
-                case Constants.MSG_IN_PENDING:
-                    console.log("Ejecutando una solicitud de pendientes");
-                    const messagePending = this.pendingAliquots.generateMessagePendingByHouse(regNumbers[Constants.SHT_TELF_HOUSE_LABEL]);
-                    console.log(messagePending);
-                    this.sendMessage(fromStd, messagePending);
-                    break;
-                case Constants.MSG_IN_DETAILS:
-                    console.log("Ejecutando una solicitud de detalles");
-                    const messageDetail = this.pendingAliquots.generateDetailPaysMessages(regNumbers[Constants.SHT_TELF_HOUSE_LABEL]);
-                    console.log(messageDetail);
-                    this.sendMessage(fromStd, messageDetail);
-                    break;
-                default:
-                    const wellcomeMessage = Util.generateWelcomeMesageBot(regNumbers[Constants.SHT_TELF_HOUSE_LABEL]);
-                    this.sendMessage(fromStd, wellcomeMessage);
-                    break;
-            }
         }else{
             console.log("Su numero no esta registrado");
         }
+
+
+        // switch (key) {
+        //     case value:
+                
+        //         break;
+        
+        //     default:
+        //         break;
+        // }
     }
 
    
     sendMessage(number = null, text = null){
-        if(number){
-            number = number.replace('@c.us', '');
-            number = `${number}@c.us`;
-            const message = text || `Hola soy un BOT recuerda`;
-            this.client.sendMessage(number, message);
-        }
+        number = number.replace('@c.us', '');
+        number = `${number}@c.us`;
+        const message = text || `Hola soy un BOT recuerda`;
+        this.client.sendMessage(number, message);
     }
 
     connectionReady() {
@@ -143,56 +124,46 @@ class WhatsAppBoot{
     }
 
     sendAllMessage = async (req, res) => {
-        const messages = this.pendingAliquots.generateMessageAllPendings();
+        const filePath = "./src/resources/ControlTesoreria.xlsx";
+        const sheetAliquots = "Alicuotas";
+        //const sheetCellNumbers = "Telefonos";
+        const sheetCellNumbers = "TelefonosPrueba";
+        const pendingAliquots = new PendingAliquots(filePath, sheetAliquots, sheetCellNumbers, "2021", "Junio" );
+        await pendingAliquots.init();
+
+        const messages = [];
+        pendingAliquots.jsonXlsAlicuotas.forEach(element => {
+            if(element[Constants.NAME_LABEL]){
+                const rowResult = pendingAliquots.getResumeByUser(element);
+                //const message = this.generateMesage(rowResult, element[Constants.HOUSE_LABEL]);
+                const message = Util.generateMesage(rowResult, element[Constants.HOUSE_LABEL]);
+                messages.push(element[Constants.HOUSE_LABEL] + "|" +message);
+            }
+        });
+
         for (let index = 0; index < messages.length; index++) {
             const element = messages[index].split("|");
-            const regNumbers =   this.pendingAliquots.jsonXlsCellNumbers.find(row => row.CASA === element[0]);
+            const regNumbers =   pendingAliquots.jsonXlsCellNumbers.find(row => row.CASA === element[0]);
             /////////////////// borrar el if
             if(index === 3){
                 break;
             }
             ////////////////////////
             console.log(regNumbers);
-            this.sendMessage(regNumbers[Constants.SHT_TELF_CELL1_LABEL], element[1]);
-            this.sendMessage(regNumbers[Constants.SHT_TELF_CELL2_LABEL], element[1]);
+            if(regNumbers["Celular1"] && regNumbers["Celular1"].length > 0){
+                this.sendMessage(regNumbers["Celular1"], element[1]);
+            }
+            if(regNumbers["Celular2"] && regNumbers["Celular2"].length > 0){
+                this.sendMessage(regNumbers["Celular2"], element[1]);
+            }
             console.log("**********************************************");
             //await this.sleepNow(100);
         }
+
         res.jsonp({mensaje:'Notificación enviada'});
-    }
-
-    updateDataBase = async (req, res) => {
-        this.pendingAliquots = new PendingAliquots(this.filePath);
-        await this.pendingAliquots.init();
-        res.jsonp({mensaje:'Base de datos actualizada'});
-    }
-
-    pendingByHouse = async (req, res) => {
-        const house = req.body?.house;
-        let message = "<html> <body>";
-        if(house){
-            message = message + this.pendingAliquots.generateMessagePendingByHouse(house);
-            message = message.replace(/\n/g,"</br>");
-        }else{
-            message = "Request incorrecto";
-        }
-        message = message + "</body></html>";
-        res.jsonp({mensaje:message});
-    }
-
-    detailByHouse = async (req, res) => {
-        const house = req.body?.house;
-        let message = "<html> <body>";
-        if(house){
-            message = message + this.pendingAliquots.generateDetailPaysMessages(house);
-            message = message.replace(/\n/g,"</br>");
-        }else{
-            message = "Request incorrecto";
-        }
-        message = message + "</body></html>";
-        res.jsonp({mensaje:message});
     }
 
 }
 
 module.exports = WhatsAppBoot;
+

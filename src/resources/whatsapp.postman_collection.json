@@ -6,27 +6,18 @@
 	},
 	"item": [
 		{
-			"name": "whatsapp_connect",
-			"request": {
-				"method": "POST",
-				"header": [],
-				"url": {
-					"raw": "http://localhost:3000/whatsapp/connect",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "3000",
-					"path": [
-						"whatsapp",
-						"connect"
-					]
+			"name": "sendAllmessage",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
 				}
-			},
-			"response": []
-		},
-		{
-			"name": "whatsapp_sendmessage",
+			],
 			"protocolProfileBehavior": {
 				"disabledSystemHeaders": {}
 			},
@@ -35,7 +26,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"phone\": \"593123321456\",\r\n    \"body\": \"Otro mensaje mas :( \"\r\n}",
+					"raw": "{\r\n    \"phone\": \"xxxxxxx\",\r\n    \"body\": \"Otro mensaje mas :( \"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -43,19 +34,172 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:3000/whatsapp/sendmessage",
+					"raw": "http://{{environment}}/whatsapp/sendAllMessage",
 					"protocol": "http",
 					"host": [
-						"localhost"
+						"{{environment}}"
 					],
-					"port": "3000",
 					"path": [
 						"whatsapp",
-						"sendmessage"
+						"sendAllMessage"
 					]
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "updateDataBase",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {}
+			},
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n   \r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{environment}}/whatsapp/updateDataBase",
+					"protocol": "http",
+					"host": [
+						"{{environment}}"
+					],
+					"path": [
+						"whatsapp",
+						"updateDataBase"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "pendingByHouse",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {}
+			},
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"house\": \"CASA 5\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{environment}}/whatsapp/pendingByHouse",
+					"protocol": "http",
+					"host": [
+						"{{environment}}"
+					],
+					"path": [
+						"whatsapp",
+						"pendingByHouse"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "detailByHouse",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {}
+			},
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"house\": \"CASA 29\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{environment}}/whatsapp/detailByHouse",
+					"protocol": "http",
+					"host": [
+						"{{environment}}"
+					],
+					"path": [
+						"whatsapp",
+						"detailByHouse"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"var paramExecute = {",
+					"    local : \"localhost:3001\",",
+					"    nas : \"192.168.2.146:3000\",",
+					"    ",
+					"}",
+					"",
+					"//pm.environment.set(\"environment\", paramExecute[\"local\"]);",
+					"pm.environment.set(\"environment\", paramExecute[\"nas\"]);",
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
 		}
 	]
 }
