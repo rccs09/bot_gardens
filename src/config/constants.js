@@ -12,13 +12,14 @@ module.exports = Object.freeze({
     MSG_GREETING_INIT: "Estimado condomino de ",
     MSG_GREETING_COMPL: "Reciba un cordial saludo de la directiva del Conjunto Habitacional Garden's Club.",
     MSG_GREETING_COMPL2: "A continuación se detalla los haberes pendientes que usted tiene con el conjunto:",
-    MSG_GREETING_COMPL4: "Agradecemos su puntualidad en los pagos de las alicuotas, al momento usted no tiene haberes pendientes",
+    MSG_GREETING_COMPL4: "Agradecemos su puntualidad en los pagos de las alícuotas, al momento usted no tiene haberes pendientes",
     MSG_GREETING_DETAIL: "A continuación se detalla los pagos que ha realizado a esta directiva:",
     MSG_DETAIL_VOID: "Usted no ha realizado pagos a esta directiva",
     MSG_IN_PENDING: "PENDIENTES",
     MSG_IN_DETAILS: "DETALLES",
     MSG_IN_WELLCOME: "Les recuerdo que soy un BOT y puedo responder a dos mensajes:",
     MSG_CUT_DATE: "\n*Fecha de corte*: ",
+    MSG_MAIL_CUT_DATE: "\n<b>Fecha de corte</b>: ",
     SHT_STATUS_ACOUNT_NAME: "Estados_cuenta",
     SHT_ALIQUOTS_NAME: "Alicuotas",
     SHT_TELF_NAME: "TelefonosPrueba",
@@ -36,6 +37,7 @@ module.exports = Object.freeze({
     SHT_INC_DOC_LABEL: "Documento",
     SHT_INC_DESC_LABEL: "Descripcion",
     REP_PEND_TOTAL_LABEL: "*Total*: ",
+    REP_MAIL_PEND_TOTAL_LABEL: "<b>Total</b>: ",
     REP_DESC_TRANSF_TYPE_LABEL: "Transferencia"
     
 });

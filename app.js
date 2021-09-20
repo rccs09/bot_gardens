@@ -25,6 +25,7 @@ whatsAppBoot.init();
 app.post('/whatsapp/sendAllMessage', whatsAppBoot.sendAllMessage);
 app.post('/whatsapp/updateDataBase', whatsAppBoot.updateDataBase);
 app.post('/whatsapp/pendingByHouse', whatsAppBoot.pendingByHouse);
+app.post('/whatsapp/pendingAllHouse', whatsAppBoot.pendingAllHouse);
 app.post('/whatsapp/detailByHouse', whatsAppBoot.detailByHouse);
 app.listen(port, () => {
     console.log(`Iniciado el servidor en el puerto ${port}`);

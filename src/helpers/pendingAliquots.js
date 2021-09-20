@@ -47,6 +47,18 @@ class PendingAliquots{
                 "pendingVal": pendingVal
             });
         }
+
+        if(rowUser[Constants.HOUSE_LABEL] === "CASA 11"){
+            const pendingVal = 2050;
+            totalVal += pendingVal;
+            items.push({ 
+                "year"      : "Anteriores",
+                "month"     : "Directivas",
+                "pendingVal": pendingVal
+            });
+        }
+
+
         for(var i in rowUser){
             if(i === Constants.NAME_LABEL || i === Constants.HOUSE_LABEL){
                 objResult[i] = rowUser[i];
@@ -80,17 +92,18 @@ class PendingAliquots{
         this.jsonXlsAlicuotas.forEach(element => {
             if(element[Constants.NAME_LABEL]){
                 const rowResult = this.getResumeByUser(element);
-                const message = Util.generateMesage(rowResult, element[Constants.HOUSE_LABEL], this.cutoffDate);
+                const message = Util.generateMesage(rowResult, element[Constants.HOUSE_LABEL], this.cutoffDate, 0);
                 messages.push(element[Constants.HOUSE_LABEL] + "|" +message);
             }
         });
         return messages;
     }
 
-    generateMessagePendingByHouse(house){
+    //type 0-> whatsapp 1->Mail
+    generateMessagePendingByHouse(house, type){
         const rowByHoue = this.jsonXlsAlicuotas.find(row => (row[Constants.HOUSE_LABEL]  === house));
         const rowResult = this.getResumeByUser(rowByHoue);
-        const message = Util.generateMesage(rowResult, house, this.cutoffDate);
+        const message = Util.generateMesage(rowResult, house, this.cutoffDate, type);
         return message;
     }
 

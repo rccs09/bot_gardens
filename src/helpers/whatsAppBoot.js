@@ -107,7 +107,7 @@ class WhatsAppBoot{
             switch (bodyIn) {
                 case Constants.MSG_IN_PENDING:
                     console.log("Ejecutando una solicitud de pendientes");
-                    const messagePending = this.pendingAliquots.generateMessagePendingByHouse(regNumbers[Constants.SHT_TELF_HOUSE_LABEL]);
+                    const messagePending = this.pendingAliquots.generateMessagePendingByHouse(regNumbers[Constants.SHT_TELF_HOUSE_LABEL], 0);
                     console.log(messagePending);
                     this.sendMessage(fromStd, messagePending);
                     break;
@@ -171,7 +171,7 @@ class WhatsAppBoot{
         const house = req.body?.house;
         let message = "<html> <body>";
         if(house){
-            message = message + this.pendingAliquots.generateMessagePendingByHouse(house);
+            message = message + this.pendingAliquots.generateMessagePendingByHouse(house, 0);
             message = message.replace(/\n/g,"</br>");
         }else{
             message = "Request incorrecto";
@@ -179,6 +179,29 @@ class WhatsAppBoot{
         message = message + "</body></html>";
         res.jsonp({mensaje:message});
     }
+
+
+    pendingAllHouse = async (req, res) => {
+        //const house = req.body?.house;
+        let message = "<html> <style>table, th, td { border: 1px solid black;border-collapse: collapse;}</style> <body>";
+        
+        const house = "CASA ";
+        for (let index = 1; index <= 30; index++) {
+            message = message + this.pendingAliquots.generateMessagePendingByHouse(house+index, 1);
+            message = message.replace(/\n/g,"</br>");
+            message = message + "<h1>---------------------------------------------------</h1>";
+        }
+
+        message = message + this.pendingAliquots.generateMessagePendingByHouse("LOCALES", 1);
+        message = message.replace(/\n/g,"</br>");
+        message = message + "<h1>---------------------------------------------------</h1>";
+
+        message = message + "</body></html>";
+        res.jsonp({mensaje:message});
+    }
+
+
+
 
     detailByHouse = async (req, res) => {
         const house = req.body?.house;

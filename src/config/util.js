@@ -4,34 +4,57 @@ const Moment = require('moment');
 const  monthNames = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
 
 class Util {
-    static generateMesage(rowResult, house, cutoffDate){
+    //type 0-> whatsapp 1->Mail
+    static generateMesage(rowResult, house, cutoffDate, type){
         const message = [];
         if(rowResult.Total > 0 ){
             message.push(this.generateGreatMesage(house), 
                 Constants.MSG_GREETING_COMPL + "\n", 
                 Constants.MSG_GREETING_COMPL2+ "\n"                
             );
+
+            if(type === 1){
+                message.push("<table ><tr><th>Detalle</th><th>Valor (dólares)</th></tr>");
+            }
             rowResult.Pendings.forEach(element => {
-                message.push("   ⚠️ " + element.month + "-" + element.year + " -> " + element.pendingVal + " dólares.\n");
-            });
+                if(type === 0){
+                    message.push("   ⚠️ " + element.month + "-" + element.year + " -> " + element.pendingVal + " dólares.\n");
+                }else{
+                    message.push(`<tr><td>${element.month}-${element.year}</td><td>${element.pendingVal}</td></tr>`);
+                }
+              });
     
-            message.push(Constants.REP_PEND_TOTAL_LABEL + "*" + rowResult.Total + " dólares*\n" );
+            if(type === 1){
+                message.push("</table></br>");
+                message.push(Constants.REP_MAIL_PEND_TOTAL_LABEL + "<b>" + rowResult.Total + " dólares</b>\n" );
+            }else{
+                message.push(Constants.REP_PEND_TOTAL_LABEL + "*" + rowResult.Total + " dólares*\n" );
+            }
         }else{
             message.push(this.generateGreatMesage(house), Constants.MSG_GREETING_COMPL4);
         }
 
-        message.push(this.generateCutDateMesage(cutoffDate));
+        message.push(this.generateCutDateMesage(cutoffDate, type));
         return message.join("");
     }
+
 
     static generateGreatMesage(house){
         const houseComplete = house.includes("CASA") ? "la " + house: "los " + house;
         return Constants.MSG_GREETING_INIT + houseComplete + "\n";
     } 
 
-    static generateCutDateMesage(cutoffDate){
+    //type 0-> whatsapp 1->Mail
+    static generateCutDateMesage(cutoffDate, type){
         const formattedDate = Moment(cutoffDate).format('YYYY-MM-DD');
-        return Constants.MSG_CUT_DATE + formattedDate + "\n";
+        let message = "";
+        if(type === 0){
+            message = Constants.MSG_CUT_DATE + formattedDate + "\n";
+        }else{
+            message = Constants.MSG_MAIL_CUT_DATE + formattedDate + "\n";
+        }
+
+        return message;
     } 
 
     static generateDetailMesageVoid(house, cutoffDate){
@@ -40,7 +63,7 @@ class Util {
         message.push(
             Constants.MSG_GREETING_INIT + houseComplete + "\n", Constants.MSG_GREETING_COMPL + "\n", Constants.MSG_DETAIL_VOID+ "\n"
         );
-        message.push(this.generateCutDateMesage(cutoffDate));
+        message.push(this.generateCutDateMesage(cutoffDate, 0));
         return message.join("");
     }
 
@@ -54,7 +77,7 @@ class Util {
         incomeByHouse.forEach(element => {
             message.push(Util.generateDetailSimpleMesage(element));
         });
-        message.push(this.generateCutDateMesage(cutoffDate));
+        message.push(this.generateCutDateMesage(cutoffDate, 0));
         return message.join("");
     }
 
