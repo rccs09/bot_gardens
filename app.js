@@ -16,7 +16,8 @@ const app = express();
 const router = express.Router();
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
-const port = 3001;
+
+const port = 3000;
 
 let whatsAppBoot = new WhatsAppBoot(Constants.FILE_PATH);
 whatsAppBoot.init();
