@@ -38,15 +38,15 @@ class PendingAliquots{
         const items = []; 
         let totalVal = 0;
         //caso especial casa 15
-        if(rowUser[Constants.HOUSE_LABEL] === "CASA 15"){
-            const pendingVal = 50;
-            totalVal += pendingVal;
-            items.push({ 
-                "year"      : "2019",
-                "month"     : "Febrero",
-                "pendingVal": pendingVal
-            });
-        }
+        // if(rowUser[Constants.HOUSE_LABEL] === "CASA 15"){
+        //     const pendingVal = 50;
+        //     totalVal += pendingVal;
+        //     items.push({ 
+        //         "year"      : "2019",
+        //         "month"     : "Febrero",
+        //         "pendingVal": pendingVal
+        //     });
+        // }
 
         if(rowUser[Constants.HOUSE_LABEL] === "CASA 11"){
             const pendingVal = 2050;
