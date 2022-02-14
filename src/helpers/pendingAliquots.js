@@ -38,15 +38,27 @@ class PendingAliquots{
         const items = []; 
         let totalVal = 0;
         //caso especial casa 15
-        if(rowUser[Constants.HOUSE_LABEL] === "CASA 15"){
-            const pendingVal = 50;
+        // if(rowUser[Constants.HOUSE_LABEL] === "CASA 15"){
+        //     const pendingVal = 50;
+        //     totalVal += pendingVal;
+        //     items.push({ 
+        //         "year"      : "2019",
+        //         "month"     : "Febrero",
+        //         "pendingVal": pendingVal
+        //     });
+        // }
+
+        if(rowUser[Constants.HOUSE_LABEL] === "CASA 11"){
+            const pendingVal = 2050;
             totalVal += pendingVal;
             items.push({ 
-                "year"      : "2019",
-                "month"     : "Febrero",
+                "year"      : "Anteriores",
+                "month"     : "Directivas",
                 "pendingVal": pendingVal
             });
         }
+
+
         for(var i in rowUser){
             if(i === Constants.NAME_LABEL || i === Constants.HOUSE_LABEL){
                 objResult[i] = rowUser[i];
@@ -80,17 +92,26 @@ class PendingAliquots{
         this.jsonXlsAlicuotas.forEach(element => {
             if(element[Constants.NAME_LABEL]){
                 const rowResult = this.getResumeByUser(element);
-                const message = Util.generateMesage(rowResult, element[Constants.HOUSE_LABEL], this.cutoffDate);
+                const message = Util.generateMesage(rowResult, element[Constants.HOUSE_LABEL], this.cutoffDate, 0);
                 messages.push(element[Constants.HOUSE_LABEL] + "|" +message);
             }
         });
         return messages;
     }
 
-    generateMessagePendingByHouse(house){
+    //type 0-> whatsapp 1->Mail
+    generateMessagePendingByHouse(house, type){
         const rowByHoue = this.jsonXlsAlicuotas.find(row => (row[Constants.HOUSE_LABEL]  === house));
         const rowResult = this.getResumeByUser(rowByHoue);
-        const message = Util.generateMesage(rowResult, house, this.cutoffDate);
+        const message = Util.generateMesage(rowResult, house, this.cutoffDate, type);
+        return message;
+    }
+
+    //type 0-> whatsapp 1->Mail
+    generateMessagePendingByHouseHtml(house, type){
+        const rowByHoue = this.jsonXlsAlicuotas.find(row => (row[Constants.HOUSE_LABEL]  === house));
+        const rowResult = this.getResumeByUser(rowByHoue);
+        const message = Util.generateMesageHtml(rowResult, house, this.cutoffDate, type);
         return message;
     }
 
@@ -99,16 +120,16 @@ class PendingAliquots{
         return regNumbers;
     }
 
-    generateDetailPaysMessages(house){
+    generateDetailPaysMessages(house, type){
         let message;
         const incomeByHouse =   this.jsonXlsIncome.filter(row => (row[Constants.SHT_INC_HOUSE_LABEL] === house));
-        console.log("###########################");
-        //console.log(incomeByHouse);
+        
         if(Object.keys(incomeByHouse).length === 0){
-            message = Util.generateDetailMesageVoid(house, this.cutoffDate);
+            message = Util.generateDetailMesageVoid(house, this.cutoffDate, type);
         }else{
-            message = Util.generateDetailCompleteMesage(house, incomeByHouse, this.cutoffDate)
+            message = Util.generateDetailCompleteMesage(house, incomeByHouse, this.cutoffDate, type)
         }
+        message = Constants.MSG_MAIL_RESUME_PAYS_TITLE + message;
         return message;
     }
 

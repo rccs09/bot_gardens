@@ -110,7 +110,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"house\": \"CASA 5\"\r\n}",
+					"raw": "{\r\n    \"house\": \"CASA 15\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -126,6 +126,48 @@
 					"path": [
 						"whatsapp",
 						"pendingByHouse"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "pendingAllHouse",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {}
+			},
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"house\": \"All houses\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{environment}}/whatsapp/pendingAllHouse",
+					"protocol": "http",
+					"host": [
+						"{{environment}}"
+					],
+					"path": [
+						"whatsapp",
+						"pendingAllHouse"
 					]
 				}
 			},
@@ -181,13 +223,13 @@
 				"type": "text/javascript",
 				"exec": [
 					"var paramExecute = {",
-					"    local : \"localhost:3001\",",
+					"    local : \"localhost:3000\",",
 					"    nas : \"192.168.2.146:3000\",",
 					"    ",
 					"}",
 					"",
-					"//pm.environment.set(\"environment\", paramExecute[\"local\"]);",
-					"pm.environment.set(\"environment\", paramExecute[\"nas\"]);",
+					"pm.environment.set(\"environment\", paramExecute[\"local\"]);",
+					"//pm.environment.set(\"environment\", paramExecute[\"nas\"]);",
 					""
 				]
 			}

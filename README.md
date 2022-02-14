@@ -1,3 +1,9 @@
+### Ejecucion local
+- Ejecutar "npm start"
+- Se tienen 5 consultas a nivel de postman
+  - pendingAllHouse -> trae las deudas de todas las casas en un formato HTML se puede pegar en un HTML y abrirlo con un browser para verlo formateado.
+
+
 ### Descripción:
 Este proyecto tiene por finalidad obtener los pagos pendientes de los condominos de un conjunto habitacional (desde un excel de tesorería) y enviar mediante whatsapp las deudas pendientes de cada casa.
 
@@ -9,7 +15,7 @@ Este proyecto tiene por finalidad obtener los pagos pendientes de los condominos
     /src/resources/whatsapp.postman_collection.json
 
 
-### Ejecutar proyecto en servidor (esto se debe ejecutar con un usuario admin NO ROOT)
+### Ejecutar proyecto en servidor DOCKER (esto se debe ejecutar con un usuario admin NO ROOT)
 - Para ejecutar, se ejecuta desde CLI
     - Ingresar al proyecto:
         cd /volume1/nodeJs/bot_gardens
