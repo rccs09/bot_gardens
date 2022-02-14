@@ -1,3 +1,4 @@
 node_modules/
 src/resources/*.xlsx
 src/helpers/prueba.js
+src/resources/*.html

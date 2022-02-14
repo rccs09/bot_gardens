@@ -107,21 +107,29 @@ class PendingAliquots{
         return message;
     }
 
+    //type 0-> whatsapp 1->Mail
+    generateMessagePendingByHouseHtml(house, type){
+        const rowByHoue = this.jsonXlsAlicuotas.find(row => (row[Constants.HOUSE_LABEL]  === house));
+        const rowResult = this.getResumeByUser(rowByHoue);
+        const message = Util.generateMesageHtml(rowResult, house, this.cutoffDate, type);
+        return message;
+    }
+
     validateFromNumber(from){
         const regNumbers =   this.jsonXlsCellNumbers.find(row => (row[Constants.SHT_TELF_CELL1_LABEL] === from || row[Constants.SHT_TELF_CELL2_LABEL] === from));
         return regNumbers;
     }
 
-    generateDetailPaysMessages(house){
+    generateDetailPaysMessages(house, type){
         let message;
         const incomeByHouse =   this.jsonXlsIncome.filter(row => (row[Constants.SHT_INC_HOUSE_LABEL] === house));
-        console.log("###########################");
-        //console.log(incomeByHouse);
+        
         if(Object.keys(incomeByHouse).length === 0){
-            message = Util.generateDetailMesageVoid(house, this.cutoffDate);
+            message = Util.generateDetailMesageVoid(house, this.cutoffDate, type);
         }else{
-            message = Util.generateDetailCompleteMesage(house, incomeByHouse, this.cutoffDate)
+            message = Util.generateDetailCompleteMesage(house, incomeByHouse, this.cutoffDate, type)
         }
+        message = Constants.MSG_MAIL_RESUME_PAYS_TITLE + message;
         return message;
     }
 

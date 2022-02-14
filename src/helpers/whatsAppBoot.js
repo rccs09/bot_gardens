@@ -216,6 +216,53 @@ class WhatsAppBoot{
         res.jsonp({mensaje:message});
     }
 
+    resumeAllHouse = async (req, res) => {
+        //const house = req.body?.house;
+        let message = "<html> <style>table, th, td { border: 1px solid black;border-collapse: collapse;}</style> <body>";
+        
+        const house = "CASA ";
+        /*
+        for (let index = 1; index <= 30; index++) {
+            message = message + this.pendingAliquots.generateMessagePendingByHouse(house+index, 1);
+            message = message.replace(/\n/g,"</br>");
+            message = message + "<h1>---------------------------------------------------</h1>";
+        }
+
+        message = message + this.pendingAliquots.generateMessagePendingByHouse("LOCALES", 1);
+        message = message.replace(/\n/g,"</br>");
+        message = message + "<h1>---------------------------------------------------</h1>";
+        message = message + "<h1>---------------------------------------------------</h1>";
+        message = message + "<h1>---------------------------------------------------</h1>";
+        */
+
+        for (let index = 1; index <= 30; index++) {
+            message = message + this.pendingAliquots.generateMessagePendingByHouseHtml(house+index, 1);
+            message = message.replace(/\n/g,"</br>");
+            message = message + "</br>";
+            message = message + "</br>";
+            message = message + this.pendingAliquots.generateDetailPaysMessages(house+index, 1);
+            message = message.replace(/\n/g,"</br>");    
+            message = message + "<h1>---------------------------------------------------</h1>";
+            message = message + "<h1>---------------------------------------------------</h1>";
+        }
+        message = message + this.pendingAliquots.generateMessagePendingByHouseHtml("LOCALES", 1);
+        message = message.replace(/\n/g,"</br>");
+        message = message + "</br>";
+        message = message + "</br>";
+        message = message + this.pendingAliquots.generateDetailPaysMessages("LOCALES", 1);
+        message = message.replace(/\n/g,"</br>");    
+
+/////////////////////////////////
+
+
+
+
+        
+////////////////////////////
+        message = message + "</body></html>";
+        res.jsonp({mensaje:message});
+    }
+
 }
 
 module.exports = WhatsAppBoot;

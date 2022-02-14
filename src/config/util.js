@@ -38,6 +38,46 @@ class Util {
         return message.join("");
     }
 
+    static generateMesageHtml(rowResult, house, cutoffDate, type){
+        const message = [];
+        if(rowResult.Total > 0 ){
+            message.push(this.generateGreatMesage(house), 
+                Constants.MSG_GREETING_COMPL + "\n", 
+                Constants.MSG_GREETING_COMPL3+ "\n"                
+            );
+            message.push(this.generateCutDateMesage(cutoffDate, type));
+            message.push(Constants.MSG_MAIL_RESUME_PENDING_TITLE);
+            
+            if(type === 1){
+                message.push("<table ><tr><th>Detalle</th><th>Valor (dólares)</th></tr>");
+            }
+            rowResult.Pendings.forEach(element => {
+                if(type === 0){
+                    message.push("   ⚠️ " + element.month + "-" + element.year + " -> " + element.pendingVal + " dólares.\n");
+                }else{
+                    message.push(`<tr><td>${element.month}-${element.year}</td><td>${element.pendingVal}</td></tr>`);
+                }
+              });
+    
+            if(type === 1){
+                message.push("</table></br>");
+                message.push(Constants.REP_MAIL_PEND_TOTAL_LABEL + "<b>" + rowResult.Total + " dólares</b>\n" );
+            }else{
+                message.push(Constants.REP_PEND_TOTAL_LABEL + "*" + rowResult.Total + " dólares*\n" );
+            }
+        }else{
+            message.push(this.generateGreatMesage(house), 
+                Constants.MSG_GREETING_COMPL + "\n", 
+                Constants.MSG_GREETING_COMPL3+ "\n"                
+            );
+            message.push(this.generateCutDateMesage(cutoffDate, type));
+            message.push(Constants.MSG_MAIL_RESUME_PENDING_TITLE);
+            message.push(Constants.MSG_GREETING_COMPL5);
+        }
+
+        return message.join("");
+    }
+
 
     static generateGreatMesage(house){
         const houseComplete = house.includes("CASA") ? "la " + house: "los " + house;
@@ -57,27 +97,61 @@ class Util {
         return message;
     } 
 
-    static generateDetailMesageVoid(house, cutoffDate){
+    static generateDetailMesageVoid(house, cutoffDate, type){
         const message = [];
         const houseComplete = house.includes("CASA") ? "la " + house: "los " + house;
-        message.push(
-            Constants.MSG_GREETING_INIT + houseComplete + "\n", Constants.MSG_GREETING_COMPL + "\n", Constants.MSG_DETAIL_VOID+ "\n"
-        );
-        message.push(this.generateCutDateMesage(cutoffDate, 0));
+        if(type === 0){
+            message.push(
+                Constants.MSG_GREETING_INIT + houseComplete + "\n", Constants.MSG_GREETING_COMPL + "\n", Constants.MSG_DETAIL_VOID+ "\n"
+            );
+        }else{
+            message.push(
+                Constants.MSG_MAIL_RESUME_TITLE + "\n", Constants.MSG_DETAIL_VOID + "\n"
+            );
+        }    
+
+        message.push(this.generateCutDateMesage(cutoffDate, type));
         return message.join("");
     }
 
-    static generateDetailCompleteMesage(house, incomeByHouse, cutoffDate){
+    static generateDetailCompleteMesage(house, incomeByHouse, cutoffDate, type){
         const message = [];
-        message.push(this.generateGreatMesage(house), 
-                Constants.MSG_GREETING_COMPL + "\n", 
-                Constants.MSG_GREETING_DETAIL+ "\n"                
-        );
 
-        incomeByHouse.forEach(element => {
-            message.push(Util.generateDetailSimpleMesage(element));
-        });
-        message.push(this.generateCutDateMesage(cutoffDate, 0));
+        if(type === 0){
+            message.push(this.generateGreatMesage(house), 
+                    Constants.MSG_GREETING_COMPL + "\n", 
+                    Constants.MSG_GREETING_DETAIL+ "\n"                
+            );
+
+            incomeByHouse.forEach(element => {
+                message.push(Util.generateDetailSimpleMesage(element));
+            });
+            message.push(this.generateCutDateMesage(cutoffDate, 0));
+        }else{
+            //message.push(this.generateCutDateMesage(cutoffDate, 1));
+            message.push("<table ><tr><th>Fecha</th><th>Tipo de pago</th><th>Doc. Banco</th><th>Valor (dólares)</th><th>Descripcion</th></tr>");
+            incomeByHouse.forEach(element => {
+                message.push(Util.generateDetailHtmlMesage(element));
+            });
+            message.push("</table></br>");
+        }  
+        return message.join("");
+    }
+
+    static generateDetailHtmlMesage(rowResult){
+        const message = [];
+        let testas = rowResult[Constants.SHT_INC_DATE_LABEL];
+        let payDate = this.getDateFromExcelDate(rowResult[Constants.SHT_INC_DATE_LABEL]);
+        let dateFormat = Moment(payDate).format('YYYY-MM-DD');
+        let payType = rowResult[Constants.SHT_INC_TYPE_LABEL];
+        let docNum;
+        if(payType === Constants.SHT_INC_TYPE_BILL_LABEL){
+            docNum = "---" ;
+        }else{
+            docNum = rowResult[Constants.SHT_INC_DOC_LABEL] ;
+        }
+
+        message.push(`<tr><td>${dateFormat}</td><td>${payType}</td><td>${docNum}</td><td>${rowResult[Constants.SHT_INC_VALUE_LABEL]}</td><td>${rowResult[Constants.SHT_INC_DESC_LABEL]}</td></tr>`);
         return message.join("");
     }
 

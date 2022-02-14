@@ -12,14 +12,20 @@ module.exports = Object.freeze({
     MSG_GREETING_INIT: "Estimado condomino de ",
     MSG_GREETING_COMPL: "Reciba un cordial saludo de la directiva del Conjunto Habitacional Garden's Club.",
     MSG_GREETING_COMPL2: "A continuación se detalla los haberes pendientes que usted tiene con el conjunto:",
+    MSG_GREETING_COMPL3: "A continuación el detalle de su haberes pendientes, así como también sus pagos realizados:",
     MSG_GREETING_COMPL4: "Agradecemos su puntualidad en los pagos de las alícuotas, al momento usted no tiene haberes pendientes",
+    MSG_GREETING_COMPL5: "Al momento usted no tiene haberes pendientes",
     MSG_GREETING_DETAIL: "A continuación se detalla los pagos que ha realizado a esta directiva:",
+    MSG_RESUME_DETAIL: "A continuacion el detalle de los pagos realizados a esta directiva:",
     MSG_DETAIL_VOID: "Usted no ha realizado pagos a esta directiva",
     MSG_IN_PENDING: "PENDIENTES",
     MSG_IN_DETAILS: "DETALLES",
     MSG_IN_WELLCOME: "Les recuerdo que soy un BOT y puedo responder a dos mensajes:",
     MSG_CUT_DATE: "\n*Fecha de corte*: ",
     MSG_MAIL_CUT_DATE: "\n<b>Fecha de corte</b>: ",
+    MSG_MAIL_RESUME_TITLE: "\n<h3><b>Detalle de pagos realizados</b></h3> ",
+    MSG_MAIL_RESUME_PENDING_TITLE: "\n<h3><b>Detalle haberes pendientes</b></h3> ",
+    MSG_MAIL_RESUME_PAYS_TITLE: "\n<h3><b>Detalle de pagos realizados</b></h3> ",
     SHT_STATUS_ACOUNT_NAME: "Estados_cuenta",
     SHT_ALIQUOTS_NAME: "Alicuotas",
     SHT_TELF_NAME: "TelefonosPrueba",
@@ -38,6 +44,6 @@ module.exports = Object.freeze({
     SHT_INC_DESC_LABEL: "Descripcion",
     REP_PEND_TOTAL_LABEL: "*Total*: ",
     REP_MAIL_PEND_TOTAL_LABEL: "<b>Total</b>: ",
-    REP_DESC_TRANSF_TYPE_LABEL: "Transferencia"
-    
+    REP_DESC_TRANSF_TYPE_LABEL: "Transferencia",
+    SHT_INC_TYPE_BILL_LABEL: "Efectivo"
 });
